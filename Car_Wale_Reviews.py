@@ -26,6 +26,10 @@ while True:
 			pass
 		else:
 			print(i, each_car.find_all('div')[1].a.text)
+	car_name = int(input('Select car index from above: '))
+	car_reviews = brand_webpage + all_car_list[car_name].a['href'] + 'userreviews/'
+	car_reviews_page = requests.get(car_reviews)
+	print(car_reviews_page.status_code)
 
 	print('\n\n')
 
