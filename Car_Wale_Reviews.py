@@ -1,24 +1,32 @@
 import requests 
 import lxml
 from bs4 import BeautifulSoup as Bsoup 
+from fake_useragent import UserAgent
 
+#Fetching html of main page as well as creating a list that will be filled with automaker names along with indexes for user control
 main_url = 'https://www.carwale.com'
 response = requests.get(main_url).text
 bs_object = Bsoup(response, 'lxml')
 brand_list = []
+ua = UserAgent()
 
+#Creating a loop to retrieve reviews of multiple automakers
 while True:
-	brands = bs_object.find(class_='brand-type-container')
-	brand_selector = brands
-	brands = brands.find_all('li')
-	for i, brand in enumerate(brands):
-		print(i,brand.text)
-		brand_list.append(brand)
-	select_brand = int(input('Select automaker index'))
-	brand_webpage = main_url + brand_list[select_brand].a['href']
-	brand_webpage_response = requests.get(brand_webpage).text
-	brand_webpage_soup_object = Bsoup(brand_webpage_response, 'lxml')
-	car_list = brand_webpage_soup_object.find('ul', id = 'divModels')
+
+#Finding all the automakers enlisted on Carwale
+	automakers = bs_object.find(class_='brand-type-container')
+	automaker_selector = automakers
+	automakers = automakers.find_all('li')
+	for i, automaker in enumerate(automakers):
+		print(i,automaker.text)
+		brand_list.append(automaker)
+
+#Allowing user to choose from the enlisted automakers & fetching car models enlisted by the automaker
+	select_automaker = int(input('Select automaker index'))
+	automaker_webpage = main_url + brand_list[select_automaker].a['href']
+	automaker_webpage_response = requests.get(automaker_webpage).text
+	automaker_webpage_soup_object = Bsoup(automaker_webpage_response, 'lxml')
+	car_list = automaker_webpage_soup_object.find('ul', id = 'divModels')
 	all_car_list = car_list.find_all('li')
 	print('\n')
 	for i, each_car in enumerate(all_car_list):
@@ -26,12 +34,20 @@ while True:
 			pass
 		else:
 			print(i, each_car.find_all('div')[1].a.text)
-	car_name = int(input('Select car index from above: '))
-	car_reviews = brand_webpage + all_car_list[car_name].a['href'] + 'userreviews/'
-	car_reviews_page = requests.get(car_reviews)
-	print(car_reviews_page.status_code)
 
-	print('\n\n')
+#Directing to the page of the selected car model and retrieving the url of the page its user reviews
+	car_name = int(input('Select car index from above: '))
+	car_reviews = main_url + all_car_list[car_name].a['href'] + 'userreviews/'
+
+#Scraping incomplete reviews on the main page of user reviews. For complete review, each review url has to be fetched and the page scraped
+	car_reviews_page = requests.get(car_reviews, headers = {'user-agent':ua.chrome})
+	car_reviews_page = Bsoup(car_reviews_page.text, 'lxml')
+	all_reviews = car_reviews_page.find('ul', id = 'userReviewListing')
+	all_reviews = all_reviews.find_all('li')
+	for review in all_reviews:
+		print('\n')
+		print(review.p.next_sibling.text)
+
 
 
 
