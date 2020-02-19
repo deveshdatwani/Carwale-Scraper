@@ -28,12 +28,10 @@ while True:
 	automaker_webpage_soup_object = Bsoup(automaker_webpage_response, 'lxml')
 	car_list = automaker_webpage_soup_object.find('ul', id = 'divModels')
 	all_car_list = car_list.find_all('li')
-	print('\n')
-	for i, each_car in enumerate(all_car_list):
-		if each_car.find_all('div')[1].a.text == '':
-			pass
-		else:
-			print(i, each_car.find_all('div')[1].a.text)
+	print('')
+	for i, each_car in enumerate(automaker_webpage_soup_object.find_all('strong', class_ = 'text-unbold')):
+		print(i, each_car.text)
+	print('')
 
 #Directing to the page of the selected car model and retrieving the url of the page its user reviews
 	car_name = int(input('Select car index from above: '))
