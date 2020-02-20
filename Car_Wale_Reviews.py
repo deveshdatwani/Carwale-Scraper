@@ -2,6 +2,7 @@ import requests
 import lxml
 from bs4 import BeautifulSoup as Bsoup 
 from fake_useragent import UserAgent
+import time
 
 #Fetching html of main page as well as creating a list that will be filled with automaker names along with indexes for user control
 main_url = 'https://www.carwale.com'
@@ -43,9 +44,12 @@ while True:
 	all_reviews = car_reviews_page.find('ul', id = 'userReviewListing')
 	all_reviews = all_reviews.find_all('li')
 	for review in all_reviews:
-		print('\n')
-		print(review.p.next_sibling.text)
-
-
+		review_page = main_url + review.a['href']
+		review_page_response = requests.get(review_page).text
+		review_page_soup_object = Bsoup(review_page_response, 'lxml')
+		review = review_page_soup_object.find('div', attrs = {'categoryname':'userreviews'})
+		print(review.find_all('div', class_ = 'mid-box margin-top20')[3].text)
+		print('Fetched one review')
+		time.sleep(2)
 
 
