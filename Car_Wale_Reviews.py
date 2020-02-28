@@ -3,6 +3,8 @@ import lxml
 from bs4 import BeautifulSoup as Bsoup 
 from fake_useragent import UserAgent
 import time
+import Sentimental_Analysis
+from matplotlib import pyplot as plt
 
 #Fetching html of main page as well as creating a list that will be filled with automaker names along with indexes for user control
 main_url = 'https://www.carwale.com'
@@ -10,6 +12,7 @@ response = requests.get(main_url).text
 bs_object = Bsoup(response, 'lxml')
 brand_list = []
 ua = UserAgent()
+sentiments_user_reviews = []
 
 #Creating a loop to retrieve reviews of multiple automakers
 while True:
@@ -49,7 +52,23 @@ while True:
 		review_page_soup_object = Bsoup(review_page_response, 'lxml')
 		review = review_page_soup_object.find('div', attrs = {'categoryname':'userreviews'})
 		print(review.find_all('div', class_ = 'mid-box margin-top20')[3].text)
+		user_review = review.find_all('div', class_ = 'mid-box margin-top20')[3].text
+		polarity, subjectivity = Sentimental_Analysis.review_analysis(user_review)
+		polarity = round(polarity, 2)
+		subjectivity = round(subjectivity, 2)
+		sentiments_user_reviews.append(polarity)
 		print('Fetched one review')
 		time.sleep(2)
+
+#Creating frequency chart for sentiments
+	y = range(0,10,1)
+	plt.scatter(sentiments_user_reviews,y)
+	plt.xlim(-1.0,1.0)
+	plt.ylim(0,10)
+	plt.title('Polarity Frequency')
+	plt.xlabel('Polairty')
+	plt.ylabel('Frequency')
+	plt.show()
+
 
 
