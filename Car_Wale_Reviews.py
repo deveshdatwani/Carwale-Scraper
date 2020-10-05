@@ -1,6 +1,6 @@
-import requests 
+import requests
 import lxml
-from bs4 import BeautifulSoup as Bsoup 
+from bs4 import BeautifulSoup as Bsoup
 from fake_useragent import UserAgent
 import time
 import Sentimental_Analysis
@@ -17,8 +17,7 @@ brand_list = []
 while True:
 
 #Finding all the automakers enlisted on Carwale
-	automakers = bs_object.find(class_='brand-type-container')
-	automaker_selector = automakers
+	automakers = bs_object.find(string='View More Brands').parent.parent
 	automakers = automakers.find_all('li')
 	for i, automaker in enumerate(automakers):
 		print(i,automaker.text)
@@ -50,6 +49,6 @@ while True:
 	reviews = car_review_page.find_all(string='Read More')
 	for i in reviews:
 		print(i.parent.parent.text)
-	
+
 
 
