@@ -1,6 +1,6 @@
 ## Introduction
 
-Web scrapping or crawling is the process of collecting data from a websit's source code. A scraper accesses the source code of a website using the Hyptertext Transfer Protocol or through a web browser.
+Web scrapping or crawling is the process of collecting data from a website's source code. A scraper accesses the source code of a website using the Hypertext Transfer Protocol or through a web browser.
 
 ![](https://github.com/deveshdatwani/Carwale-Scraper/blob/master/scrape.jpg)
 
@@ -36,7 +36,7 @@ python3 Car_Wale_Review.py
 
 You will see this screen subsequently (if the website source code hasn't been altered)
 
-![]()
+![](https://github.com/deveshdatwani/Carwale-Scraper/blob/master/scraper-car.png)
 
 You can now navigate through the website and go through any car's reviews using the corresponding numbers against automakers/cars.
 
